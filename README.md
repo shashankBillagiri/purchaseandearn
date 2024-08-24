@@ -1,3 +1,11 @@
+## Version Information
+
+- Application Version: 1.0.0
+- JDk Version: 8
+- Spring Boot Version: 2.7.10
+
+
+
 # purchaseandearn
 
 This project is a Spring Boot application that calculates reward points for customers based on Customer  transactions Every month.

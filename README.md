@@ -16,6 +16,19 @@ Shows us the total rewards earned by a customer every month and also cumulative 
 - Java 8 or higher
 - Gradle
 
+
+### Database Setup
+
+- This application uses the H2 in-memory database for test data insertion.
+
+- SQL Scripts
+          To set up the database schema and insert initial data, the following SQL scripts are provided:
+        - src/main/resources/schema.sql: Contains the SQL statements to create the necessary tables.
+        -  src/main/resources/data.sql: Contains the SQL statements to insert test data into the tables.
+
+- Database configuration properties are specified in the src/main/resources/application.properties file.
+
+
 ### Running the Application
 
 1. Clone the repository.

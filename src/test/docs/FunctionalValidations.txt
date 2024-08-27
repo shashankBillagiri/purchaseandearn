@@ -1,25 +1,73 @@
 Functional Validations:
 
+Test Data :
+a)   Customer Table:
+     In Customer table below is the data inserted for Testing
+
+       ID   NAME
+        1	John
+        2	Jason
+        3	Alina
+
+
+b)   Purchases Table:
+     In Purchases table below is the data inserted for Testing
+     ID  	DATE  	    AMOUNT  	CUSTOMER_ID
+     1	   2024-08-24	20.75	        1
+     2	   2024-08-20	200.00       	1
+     3	   2024-07-25	120.00	        1
+     4	   2024-07-23	75.00	        1
+     5	    2024-06-25	99.33	        1
+
+
+
 1)	 Valid Customer ID and has valid transactions in the last three months
 
 Expected Result: calculate the Rewards earned individually in the last three months and the total  of the last three months
 
-Screenshot 2024-08-26 at 7.24.39 PM
+METHOD: GET
+URL: http://localhost:8080/v1/rewardsummary/1
+
+Reponse:
+
+{
+    "JUNE": 49,
+    "AUGUST": 250,
+    "JULY": 115,
+    "TotalRewardsEarnedinLastThreeMonths": 414
+}
+
+Result: PASS
 
 
 2)	Valid Customer But no Transactions :
 
 Expected Result: Response should show 0 rewards
 
-Screenshot 2024-08-26 at 7.24.48 PM
+METHOD: GET
+URL:  http://localhost:8080/v1/rewardsummary/1
 
+Response body:
 
+{
+    "TotalRewardsEarnedinLastThreeMonths": 0
+}
 
+Result: PASS
 
 3)	Invalid Customer: No customer Exists with the given Customer ID
 Expected Result: The response should show a message stating the Customer Does not Exist
 
-Screenshot 2024-08-26 at 7.24.57 PM
+METHOD: GET
+URL:  http://localhost:8080/v1/rewardsummary/7
+
+Response Body:
+
+{
+    "errorMessage": "There are no Customers existing with the requested CustomerID"
+}
+
+Result: PASS
 
 
 

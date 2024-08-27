@@ -53,3 +53,4 @@ This project is a Spring Boot application that calculates reward points for cust
 ### Testing
 
 - Run `./gradlew test` to execute the test cases.
+- Functional validations are included in the `src/test/docs/FunctionalValidations.txt` directory. These validations ensure that key functionalities are working as expected and provide detailed test coverage for various scenarios.

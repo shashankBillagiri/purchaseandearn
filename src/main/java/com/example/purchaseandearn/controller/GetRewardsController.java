@@ -39,6 +39,7 @@ public class GetRewardsController {
             return rewardService.getMonthlyAndTotalPoints(customerId);
         }
 
+        logger.info("event=getMonthlyAndTotalPoints, requested customer with id {} does not exist", customerId);
         throw new CustomerNotFoundException(String.format(CUSTOMER_DOES_NOT_EXIST));
 
     }

@@ -1,0 +1,25 @@
+Functional Validations:
+
+1)	 Valid Customer ID and has valid transactions in the last three months
+
+Expected Result: calculate the Rewards earned individually in the last three months and the total  of the last three months
+
+Screenshot 2024-08-26 at 7.24.39 PM
+
+
+2)	Valid Customer But no Transactions :
+
+Expected Result: Response should show 0 rewards
+
+Screenshot 2024-08-26 at 7.24.48 PM
+
+
+
+
+3)	Invalid Customer: No customer Exists with the given Customer ID
+Expected Result: The response should show a message stating the Customer Does not Exist
+
+Screenshot 2024-08-26 at 7.24.57 PM
+
+
+

@@ -34,19 +34,19 @@ public class GetRewardsController {
     @GetMapping({"/customerIds"})
     public CompletableFuture<Map<Long, Map<String, Integer>>> getMonthlyAndTotalPointsForCustomers(@RequestParam List<Long> customerIds) throws CustomerNotFoundException {
         logger.info("event=getMonthlyAndTotalPointsForCustomers, received request to fetch monthlyAndTotal points for customers with ids = {}", customerIds);
-        Map<Long, CompletableFuture<Map<String, Integer>>> customerPointsFutures = new HashMap<>();
+        Map<Long, CompletableFuture<Map<String, Integer>>> customerRewardPoints = new HashMap<>();
 
         for (Long customerId : customerIds) {
             if (this.customerService.isValidCustomerID(customerId)) {
-                customerPointsFutures.put(customerId, this.rewardService.getMonthlyAndTotalPoints(customerId));
+                customerRewardPoints.put(customerId, this.rewardService.getMonthlyAndTotalPoints(customerId));
             } else {
                 logger.info("event=getMonthlyAndTotalPointsForCustomers, requested customer with id {} does not exist", customerId);
                 throw new CustomerNotFoundException(String.format("There are no Customers existing with the requested CustomerID: %s Please check the customerID's and provide Valid CustomerID", customerId));
             }
         }
 
-        return CompletableFuture.allOf(customerPointsFutures.values().toArray(new CompletableFuture[0]))
-                .thenApply(v -> customerPointsFutures.entrySet().stream()
+        return CompletableFuture.allOf(customerRewardPoints.values().toArray(new CompletableFuture[0]))
+                .thenApply(v -> customerRewardPoints.entrySet().stream()
                         .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().join())));
     }
 

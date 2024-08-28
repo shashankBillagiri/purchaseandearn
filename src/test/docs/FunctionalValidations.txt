@@ -12,29 +12,39 @@ a)   Customer Table:
 
 b)   Purchases Table:
      In Purchases table below is the data inserted for Testing
-     ID  	DATE  	    AMOUNT  	CUSTOMER_ID
-     1	   2024-08-24	20.75	        1
-     2	   2024-08-20	200.00       	1
-     3	   2024-07-25	120.00	        1
-     4	   2024-07-23	75.00	        1
-     5	    2024-06-25	99.33	        1
+
+    ID    DATE  	AMOUNT  CUSTOMER_ID
+     1	2024-08-24	20.75	1
+     2	2024-08-20	200.00	1
+     3	2024-07-25	120.00	1
+     4	2024-07-23	75.00	1
+     5	2024-06-25	99.33	1
+     6	2024-08-10	99.33	2
+     7	2024-07-25	65.00	2
 
 
 
-1)	 Valid Customer ID and has valid transactions in the last three months
+1)	 Valid Customer ID's and has valid transactions in the last three months
 
 Expected Result: calculate the Rewards earned individually in the last three months and the total  of the last three months
 
 METHOD: GET
-URL: http://localhost:8080/v1/rewardsummary/1
+URL: http://localhost:8080/v1/rewardsummary/customerIds?customerIds=1,2
 
 Reponse:
 
 {
-    "JUNE": 49,
-    "AUGUST": 250,
-    "JULY": 115,
-    "TotalRewardsEarnedinLastThreeMonths": 414
+    "1": {
+        "JUNE": 49,
+        "AUGUST": 250,
+        "JULY": 115,
+        "TotalRewardsEarnedinLastThreeMonths": 414
+    },
+    "2": {
+        "AUGUST": 49,
+        "JULY": 15,
+        "TotalRewardsEarnedinLastThreeMonths": 64
+    }
 }
 
 Result: PASS
@@ -45,12 +55,14 @@ Result: PASS
 Expected Result: Response should show 0 rewards
 
 METHOD: GET
-URL:  http://localhost:8080/v1/rewardsummary/1
+URL:  http://localhost:8080/v1/rewardsummary/customerIds?customerIds=3
 
 Response body:
 
 {
-    "TotalRewardsEarnedinLastThreeMonths": 0
+    "3": {
+        "TotalRewardsEarnedinLastThreeMonths": 0
+    }
 }
 
 Result: PASS
@@ -59,12 +71,12 @@ Result: PASS
 Expected Result: The response should show a message stating the Customer Does not Exist
 
 METHOD: GET
-URL:  http://localhost:8080/v1/rewardsummary/7
+URL: http://localhost:8080/v1/rewardsummary/customerIds?customerIds=5
 
 Response Body:
 
 {
-    "errorMessage": "There are no Customers existing with the requested CustomerID"
+    "errorMessage": "There are no Customers existing with the requested CustomerID: 5 Please check the customerID's and provide Valid CustomerID"
 }
 
 Result: PASS

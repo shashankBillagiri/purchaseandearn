@@ -40,7 +40,20 @@ This project is a Spring Boot application that calculates reward points for cust
 
 ### API Endpoints
 
-- `GET /v1/rewardSummary/{customerId}`: Get total points earned every month and in the last three months for a customer.
+- `GET rewardsummary/customerIds?customerIds={customerIds}`: Get total points earned every month and in the last three months for a customer or Multiple Customers.
+
+                A[Start] --> B[Receive HTTP GET Request to /customerIds with List of customerIds];
+                B --> C[Log Request - Customer IDs];
+                C --> D[Iterate Over Each customerId];
+                D --> E{Is customerId Valid?};
+                E -->|Yes| F[Fetch Rewards Data with rewardService.getMonthlyAndTotalPoints(customerId)];
+                E -->|No| G[Log Error and Throw CustomerNotFoundException];
+                F --> H[Store CompletableFuture in Map];
+               H --> I{All customerIds Processed?};
+               I -->|Yes| J[Combine CompletableFutures using CompletableFuture.allOf];
+               J --> K[Collect Results into Final Map];
+               K --> L[Return Map as HTTP Response];
+               L --> M[End];
 
 ### Logging
 
@@ -54,3 +67,4 @@ This project is a Spring Boot application that calculates reward points for cust
 
 - Run `./gradlew test` to execute the test cases.
 - Functional validations are included in the `src/test/docs/FunctionalValidations.txt` directory. These validations ensure that key functionalities are working as expected and provide detailed test coverage for various scenarios.
+- Sample Responses from the designed endpoint for different requests are documented  `src/test/docs` directory for reference.

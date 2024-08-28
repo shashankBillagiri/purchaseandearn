@@ -7,13 +7,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import static com.example.purchaseandearn.util.RewardsUtility.CUSTOMER_DOES_NOT_EXIST;
 import static com.example.purchaseandearn.util.RewardsUtility.REQUEST_MAPPING;
@@ -31,17 +31,24 @@ public class GetRewardsController {
     @Autowired
     private CustomerService customerService;
 
-    @GetMapping("/{customerId}")
-    public CompletableFuture<Map<String, Integer>> getMonthlyAndTotalPoints(@PathVariable Long customerId) throws CustomerNotFoundException {
-        logger.info("event=getMonthlyAndTotalPoints, received request to fetch monthlyAndTotal points for customer with id = {}", customerId);
+    @GetMapping({"/customerIds"})
+    public CompletableFuture<Map<Long, Map<String, Integer>>> getMonthlyAndTotalPointsForCustomers(@RequestParam List<Long> customerIds) throws CustomerNotFoundException {
+        logger.info("event=getMonthlyAndTotalPointsForCustomers, received request to fetch monthlyAndTotal points for customers with ids = {}", customerIds);
+        Map<Long, CompletableFuture<Map<String, Integer>>> customerPointsFutures = new HashMap<>();
 
-        if (customerService.isValidCustomerID(customerId)) {
-            return rewardService.getMonthlyAndTotalPoints(customerId);
+        for (Long customerId : customerIds) {
+            if (this.customerService.isValidCustomerID(customerId)) {
+                customerPointsFutures.put(customerId, this.rewardService.getMonthlyAndTotalPoints(customerId));
+            } else {
+                logger.info("event=getMonthlyAndTotalPointsForCustomers, requested customer with id {} does not exist", customerId);
+                throw new CustomerNotFoundException(String.format("There are no Customers existing with the requested CustomerID: %s Please check the customerID's and provide Valid CustomerID", customerId));
+            }
         }
 
-        logger.info("event=getMonthlyAndTotalPoints, requested customer with id {} does not exist", customerId);
-        throw new CustomerNotFoundException(String.format(CUSTOMER_DOES_NOT_EXIST));
-
+        return CompletableFuture.allOf(customerPointsFutures.values().toArray(new CompletableFuture[0]))
+                .thenApply(v -> customerPointsFutures.entrySet().stream()
+                        .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().join())));
     }
+
 
 }
